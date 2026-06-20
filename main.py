@@ -4,7 +4,7 @@ import numpy as np
 
 def main():
     # Ścieżka do pliku z folderu data - potem ewentualnie z ekranu ze streama będę próbował
-    sciezka = "data/         .mp4"
+    sciezka = "data/DFL_Bundesliga_Data_Shootout/test/test (1).mp4"
 
     # Inicjalizacja obiektu do przechwytywania wideo
     cap = cv2.VideoCapture(sciezka)
@@ -16,32 +16,29 @@ def main():
 
     print("Udało się odtworzyć film. Wciśnij 'q' aby przerwać")
 
-    while True:
+    print("Rozpoczynam pętlę odczytu...")
+    licznik_klatek = 0
 
-        ret, frame = cap.read() # ret (bool) mówi czy została pobrana klatka, frame to nasza klatka (macierz pikseli)
+    while True:
+        ret, frame = cap.read()
 
         if not ret:
-            print("Koniec strumienia wideo")
+            print(f"Koniec strumienia. Łącznie odczytano klatek: {licznik_klatek}")
             break
 
-        # TU BEDZIE LOGIKA PROGRAMU
-        #
-        #
-        #
-        #
-        #
-        #
+        licznik_klatek += 1
 
+        # Wyświetlenie klatki
+        cv2.imshow("Analiza Wideo", frame)
 
-        # Wyświetlenie przetworzonej klatki na ekranie
-        cv2.imshow("Frame", frame)
-
-        if cv2.waitKey(25) & 0xFF == ord('q'):  # czekamy 0,25s na reakcję klawiatury, warunek 0xFF upewnia się że q zostanie dobrze odczytane z bitów (sprawdza tylko ostatnie 8)
-            print("Zamykanie programu")
+        # Kluczowe opóźnienie: 30ms daje ~30 FPS. - do dostosowania w przyszłości
+        if cv2.waitKey(30) & 0xFF == ord('q'):
+            print(f"Przerwano ręcznie. Odczytano klatek: {licznik_klatek}")
             break
 
-        cap.release()
-        cv2.destroyAllWindows()
+    # Sprzątanie pamięci
+    cap.release()
+    cv2.destroyAllWindows()
 
 if __name__ == "__main__":
     main()
